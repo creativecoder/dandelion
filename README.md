@@ -32,6 +32,14 @@ Git repository is searched for a file named `dandelion.yml`). Example:
         - dandelion.yml
     revision_file: .revision
 
+Passwords
+---------
+If you set up your ssh config to log in to the specified server using an ssh key, you do not need to specify the password in the configuration file. You must use `ssh-add` to add the appropriate key to your ssh agent first.
+
+If SSH logins are not supported by your remote server, and you are using OSX, you can store the login credentials in your keychain and dandelion will search for them when deploying. Do this by first logging in to the server through an (S)FTP client (like Cyberduck) that will save the password in your keychain.
+
+It is recommended that you **_do not_** select **"Allow all"** when you are asked if ruby can access your keychain--this would give **all ruby applications access** to these credentials.
+
 Schemes
 -------
 There is support for multiple backend file transfer schemes.  The configuration

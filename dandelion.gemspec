@@ -17,6 +17,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'mocha', '>= 0.9.12'
   s.add_development_dependency 'net-sftp', '>= 2.0.5'
   s.add_development_dependency 'aws-s3', '>= 0.6.0'
+  s.add_development_dependency 'osx_keychain', '>= 1.0.0'
 
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")

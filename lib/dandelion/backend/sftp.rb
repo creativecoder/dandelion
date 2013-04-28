@@ -5,13 +5,20 @@ module Dandelion
   module Backend
     class SFTP < Backend::Base
       scheme 'sftp'
-      gems 'net-sftp'
+      gems 'net-sftp', 'osx_keychain'
       
       def initialize(config)
         require 'net/sftp'
+        require 'osx_keychain'
+        keychain = OSXKeychain.new
         @config = { 'preserve_permissions' => true }.merge(config)
+        if @config['password']
+        	password = @config['password']
+        else 
+        	password = keychain[@config['host'], @config['username']]
+        end
         options = {
-          :password => @config['password'],
+          :password => password,
           :port => @config['port'] || Net::SSH::Transport::Session::DEFAULT_PORT,
         }
         @sftp = Net::SFTP.start(@config['host'], @config['username'], options)
