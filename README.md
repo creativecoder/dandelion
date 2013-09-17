@@ -7,30 +7,49 @@ Install
 Ensure that Ruby and RubyGems are installed, then run:
 
     $ gem install dandelion
-    
+
 Alternatively, you can build the gem yourself:
 
     $ git clone git://github.com/scttnlsn/dandelion.git
     $ cd dandelion
     $ rake install
-    
+
 Config
 ------
 Configuration options are specified in a YAML file (by default, the root of your
 Git repository is searched for a file named `dandelion.yml`). Example:
 
     # Required
+    # --------
+
     scheme: sftp
     host: example.com
     username: user
     password: pass
-    
+
     # Optional
+    # --------
+
+    # Remote path
     path: path/to/deployment
+
+    # Local Path
+    local_path: path/in/repo
+
+    # Remote file name in which the current revision is stored
+    revision_file: .revision
+
+    # These files or folders (from Git) will not be uploaded during a deploy
     exclude:
         - .gitignore
         - dandelion.yml
-    revision_file: .revision
+        - folder/
+
+    # These files (from your working directory) will be uploaded on every deploy
+    additional:
+        - public/css/print.css
+        - public/css/screen.css
+        - public/js/main.js
 
 Passwords
 ---------
@@ -57,7 +76,9 @@ Required:
 Optional:
 
  * `path`
- * `exclude`
+ * `local_path` (defaults to repository root)
+ * `exclude` (if local_path is set, files are relative to that path)
+ * `additional`
  * `port`
  * `revision_file` (defaults to .revision)
  * `preserve_permissions` (defaults to true)
@@ -73,11 +94,13 @@ Required:
 Optional:
 
  * `path`
- * `exclude`
+ * `local_path` (defaults to repository root)
+ * `exclude` (if local_path is set, files are relative to that path)
+ * `additional`
  * `port`
  * `revision_file` (defaults to .revision)
  * `passive` (defaults to true)
-    
+
 **Amazon S3**: `scheme: s3`
 
 Required:
@@ -89,7 +112,9 @@ Required:
 Optional:
 
  * `path`
- * `exclude`
+ * `local_path` (defaults to repository root)
+ * `exclude` (if local_path is set, files are relative to that path)
+ * `additional`
  * `revision_file` (defaults to .revision)
 
 Usage
@@ -97,7 +122,7 @@ Usage
 From within your Git repository, run:
 
     $ dandelion deploy
-    
+
 This will deploy the local `HEAD` revision to the location specified in the config
 file.  Dandelion keeps track of the currently deployed revision so that only files
 which have been added/changed/deleted need to be transferred.
@@ -119,7 +144,7 @@ For a more complete summary of usage options, run:
     Available commands:
         deploy
         status
-        
+
 Note that when specifying the repository or configuration file, the given paths
 are relative to the current working directory (not the repository root).  To see
 the options for a particular command, run:
