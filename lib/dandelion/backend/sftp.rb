@@ -14,8 +14,11 @@ module Dandelion
         @config = { 'preserve_permissions' => true }.merge(config)
         if @config['password']
         	password = @config['password']
+        elsif keychain[@config['host'], @config['username']]
+          password = keychain[@config['host'], @config['username']]
         else 
-        	password = keychain[@config['host'], @config['username']]
+          password = `echo "$(osascript -e 'Tell application "System Events" to display dialog "Enter SFTP Password:" with hidden answer default answer ""' -e 'text returned of result' 2>/dev/null)"`
+          keychain[@config['host'], @config['username']] = password
         end
         options = {
           :password => password,
