@@ -1,5 +1,6 @@
 require 'dandelion/git'
 
+
 module Dandelion
   module Deployment
     class RemoteRevisionError < StandardError; end
@@ -60,7 +61,16 @@ module Dandelion
 
         @options[:additional].each do |file|
           log.debug("Uploading additional file: #{file}")
-          @backend.write(file, IO.read(file))
+          
+          local_file = remote_file = file
+          
+          if !@options[:local_path].nil? && !@options[:local_path].empty?
+            local_file = File.join( @options[:local_path], local_file )
+          else
+            local_file = File.expand_path( local_file )
+          end
+
+          @backend.write(remote_file, IO.read(local_file))
         end
       end
 
